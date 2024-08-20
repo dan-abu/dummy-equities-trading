@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "dummy-equities-trading"
+version = "0.1.0"
+description = "Automated bot trading dummy equities and showing its performance on a website"
+authors = ["Daniel Abu <99013608+dan-abu@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pytest = "^8.3.2"
+pandas = "^2.2.2"
+numpy = "^2.0.1"
+matplotlib = "^3.9.2"
+googlefinance = "^0.7"
+alpaca-py = "^0.28.1"
+requests = "^2.32.3"
+django = "^5.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
