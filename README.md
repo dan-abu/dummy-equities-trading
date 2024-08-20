@@ -43,6 +43,9 @@ If you don't have `Poetry` installed, you can install it following these instruc
 Once the repo's cloned and `Poetry`'s installed, run `poetry install` in the CLI
 to install all the dependencies.
 
+Keep in mind that you will need **2** terminal windows: one for the trading bot and the
+other for the website.
+
 ```
 poetry run python3 main.py NVDA GBP <LIVE_API_KEY_ID> <LIVE_API_SECRET> <PAPER_API_KEY> <PAPER_SECRET_KEY> market gtc 10 5
 ```
