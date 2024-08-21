@@ -15,6 +15,7 @@ googlefinance = "^0.7"
 alpaca-py = "^0.28.1"
 requests = "^2.32.3"
 django = "^5.1"
+python-dotenv = "^1.0.1"
 
 
 [build-system]

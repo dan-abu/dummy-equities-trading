@@ -39,7 +39,7 @@ def retry_on_exception(max_retries=3, retry_delay=5, exceptions=(Exception,)):
 def get_latest_bid_ask(sym: str) -> dict:
     """Gets latest bids and asks from CSV"""
     df = pd.read_csv(
-        "dummy_equities_trading/data/quotes/latest_stock_quotes.csv", index_col=0
+        "chart_app/data/quotes/latest_stock_quotes.csv", index_col=0
     )
 
     prices = {
@@ -50,7 +50,7 @@ def get_latest_bid_ask(sym: str) -> dict:
     return prices
 
 
-@retry_on_exception(max_retries=3, retry_delay=1, exceptions=(RequestException,))
+@retry_on_exception(max_retries=3, retry_delay=5, exceptions=(RequestException,))
 def get_open_orders(api_key: str, secret_key: str) -> str:
     """Gets all open orders"""
 
@@ -68,7 +68,7 @@ def get_open_orders(api_key: str, secret_key: str) -> str:
     return response.text
 
 
-@retry_on_exception(max_retries=3, retry_delay=1, exceptions=(RequestException,))
+@retry_on_exception(max_retries=3, retry_delay=5, exceptions=(RequestException,))
 def cancel_orders(api_key: str, secret_key: str) -> str:
     """Cancels all open orders"""
     url = "https://paper-api.alpaca.markets/v2/orders"
@@ -84,7 +84,7 @@ def cancel_orders(api_key: str, secret_key: str) -> str:
     return response.text
 
 
-@retry_on_exception(max_retries=10, retry_delay=1, exceptions=(RequestException,))
+@retry_on_exception(max_retries=10, retry_delay=5, exceptions=(RequestException,))
 def place_order(
     side: str, type: str, tic: str, sym: str, qty: str, api_key: str, secret_key: str
 ) -> str:

@@ -2,7 +2,7 @@
 Gets latest stock quote(s) from Alpaca
 Gets your current positions from Alpaca
 """
-# poetry run python3 chart_app/get_data.py NVDA GBP <API_KEY_ID> <API_SECRET>
+# poetry run python3 chart_app/get_data.py NVDA GBP <PAPER_API_KEY> <PAPER_SECRET_KEY>
 import argparse
 import requests
 import json
@@ -13,7 +13,7 @@ import pandas as pd
 from requests.exceptions import RequestException
 
 
-@retry_on_exception(max_retries=3, retry_delay=1, exceptions=(RequestException,))
+@retry_on_exception(max_retries=3, retry_delay=5, exceptions=(RequestException,))
 def extract_latest_quote_data(sym: str, currency: str, key: str, secret: str) -> str:
     """Pulls latest stock quotes from Alpaca Markets"""
 
@@ -50,20 +50,20 @@ def clean_latest_quote_data(data: str, currency: str) -> pd.DataFrame:
     return new_df
 
 
-def main(sym: str, currency: str, key: str, secret: str) -> str:
+def main(sym: str, currency: str, paper_key: str, paper_secret: str) -> str:
     """Module entry point: creates CSV of quotes data"""
     quotes_data = extract_latest_quote_data(
-        sym=sym, currency=currency, key=key, secret=secret
+        sym=sym, currency=currency, key=paper_key, secret=paper_secret
     )
     df = clean_latest_quote_data(data=quotes_data, currency=currency)
-    if not os.listdir("dummy_equities_trading/data/quotes"):
-        df.to_csv("dummy_equities_trading/data/quotes/latest_stock_quotes.csv")
+    if not os.listdir("chart_app/data/quotes"):
+        df.to_csv("chart_app/data/quotes/latest_stock_quotes.csv")
     else:
         old_df = pd.read_csv(
-            "dummy_equities_trading/data/quotes/latest_stock_quotes.csv", index_col=0
+            "chart_app/data/quotes/latest_stock_quotes.csv", index_col=0
         )
         new_df = pd.concat([old_df, df], axis=0)
-        new_df.to_csv("dummy_equities_trading/data/quotes/latest_stock_quotes.csv")
+        new_df.to_csv("chart_app/data/quotes/latest_stock_quotes.csv")
 
 
 if __name__ == "__main__":
@@ -73,14 +73,14 @@ if __name__ == "__main__":
 
     parser.add_argument("symbol", type=str, help="Stock symbol to retrieve")
     parser.add_argument("currency", type=str, help="Currency type (e.g., USD)")
-    parser.add_argument("live_key", type=str, help="Alpaca LIVE API key")
-    parser.add_argument("live_secret", type=str, help="Alpaca LIVE API secret key")
+    parser.add_argument("paper_key", type=str, help="Alpaca PAPER API key")
+    parser.add_argument("paper_secret", type=str, help="Alpaca PAPER API secret key")
 
     args = parser.parse_args()
 
     main(
         sym=args.symbol,
         currency=args.currency,
-        key=args.live_key,
-        secret=args.live_secret,
+        paper_key=args.paper_key,
+        paper_secret=args.paper_secret
     )

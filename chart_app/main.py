@@ -2,12 +2,14 @@
 Gets latest stock data for a given stock once every minute as per get_data.py
 Trades until capital's exhausted or all stocks are sold as per execute_trade.py
 """
-# poetry run python3 main.py NVDA GBP <LIVE_API_KEY_ID> <LIVE_API_SECRET> <PAPER_API_KEY> <PAPER_SECRET_KEY> market gtc 10 5
+# poetry run python3 chart_app/main.py NVDA GBP market gtc 10 5
 import asyncio
 import get_data
 import execute_trade
 import argparse
 import logging
+import os
+from dotenv import load_dotenv
 
 # Set up logging
 logging.basicConfig(
@@ -27,8 +29,8 @@ async def run_get_data(
                 get_data.main,
                 sym=sym,
                 currency=currency,
-                key=live_key,
-                secret=live_secret,
+                paper_key=paper_key,
+                paper_secret=paper_secret,
             )
             logger.info(f"Data fetched successfully for {sym}")
         except Exception as e:
@@ -97,10 +99,6 @@ if __name__ == "__main__":
 
     parser.add_argument("symbol", type=str, help="Stock symbol to retrieve")
     parser.add_argument("currency", type=str, help="Currency type (e.g., USD)")
-    parser.add_argument("live_key", type=str, help="Alpaca LIVE API key")
-    parser.add_argument("live_secret", type=str, help="Alpaca LIVE API secret key")
-    parser.add_argument("paper_key", type=str, help="Alpaca PAPER API key")
-    parser.add_argument("paper_secret", type=str, help="Alpaca PAPER API secret key")
     parser.add_argument(
         "type",
         type=str,
@@ -118,18 +116,25 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    #loading and setting environment variables
+    load_dotenv()
+    paper_key = os.getenv("PAPER_API_KEY")
+    paper_secret = os.getenv("PAPER_SECRET_KEY")
+    live_key = os.getenv("LIVE_API_KEY")
+    live_secret = os.getenv("LIVE_SECRET_KEY")
+
     logger.info("Starting script")
     try:
         asyncio.run(
             main(
                 sym=args.symbol,
                 currency=args.currency,
-                live_key=args.live_key,
-                live_secret=args.live_secret,
+                live_key=live_key,
+                live_secret=live_secret,
                 qty=args.qty,
                 ref_int=args.ref_int,
-                paper_key=args.paper_key,
-                paper_secret=args.paper_secret,
+                paper_key=paper_key,
+                paper_secret=paper_secret,
                 type=args.type,
                 tic=args.tic,
             )

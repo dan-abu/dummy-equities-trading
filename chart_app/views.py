@@ -9,15 +9,11 @@ import matplotlib.pyplot as plt
 import multiprocessing
 from datetime import datetime as dt, timedelta
 import pandas as pd
+import os
+from dotenv import load_dotenv
 from requests.exceptions import RequestException
 from django.shortcuts import render
 from chart_app.execute_trade import retry_on_exception
-
-def set_keys(filename: str) -> list:
-    """Gets secret key from file stored locally."""
-    with open(filename, "r") as f:
-        lines = [line.strip() for line in f.readlines()]
-    return lines
 
 @retry_on_exception(max_retries=3, retry_delay=1, exceptions=(RequestException,))
 def get_portfolio_data(paper_key: str, paper_secret: str) -> dict:
@@ -77,8 +73,10 @@ def generate_plot(data: pd.DataFrame, output):
 
 def portfolio_view(request):
     """Django view to fetch portfolio data, plot it, and return the image."""
-    keys = set_keys("secrets.txt")
-    portfolio_data = get_portfolio_data(keys[2], keys[4])
+    load_dotenv()
+    paper_key = os.getenv("PAPER_API_KEY")
+    paper_secret = os.getenv("PAPER_SECRET_KEY")
+    portfolio_data = get_portfolio_data(paper_key, paper_secret)
     cleaned_data = clean_portfolio_data(portfolio_data)
 
     # Create a separate process for plotting

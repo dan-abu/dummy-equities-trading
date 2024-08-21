@@ -47,12 +47,14 @@ Keep in mind that you will need **2** terminal windows: one for the trading bot 
 other for the website.
 
 ```
-poetry run python3 main.py NVDA GBP <LIVE_API_KEY_ID> <LIVE_API_SECRET> <PAPER_API_KEY> <PAPER_SECRET_KEY> market gtc 10 5
+poetry run python3 main.py NVDA GBP market gtc 10 5
 ```
 The above command will kick off the bot. The command below will create the website
 `poetry run python3 manage.py runserver`.
 
-Data is provided by `alpaca`. You will need to generate **LIVE** API keys to extract data.
+Data is provided by `alpaca`. You will need to generate **LIVE** and **PAPER** API keys to extract data
+and create orders.
+
 You can generate keys once you've made an account here (it's free):
 `https://alpaca.markets/`.
 
@@ -60,11 +62,11 @@ You will need **PAPER** API keys to make trades. This ensures you trade with fak
 money and not your own. You can find out how to do this here:
 `https://docs.alpaca.markets/docs/authentication-1`.
 
-Add your keys to `secrets.txt` once they are ready.
+Add your keys to `.env` once they are ready.
 
 ## Watch outs
 -----------------------------------------------------------------------------------------
 If bot gets stuck in a `403 Client Error` cycle, be aware that Alpaca might be throttling
-your account.
+your account. Get in touch with Alpaca if this happens.
 
 **HAPPY TRADING**
